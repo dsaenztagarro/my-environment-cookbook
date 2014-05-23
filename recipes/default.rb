@@ -2,14 +2,10 @@
 # Cookbook Name:: my_environment
 # Recipe:: default
 #
-# Copyright (C) 2014 YOUR_NAME
+# Copyright (C) 2014 David Saenz Tagarro
 #
 # All rights reserved - Do Not Redistribute
 #
-
-home_dir = "/home/vagrant"
-development_dir = "#{home_dir}/Development"
-projects_dir = "#{development_dir}/projects"
 
 include_recipe 'apt'
 include_recipe 'vim'
@@ -44,4 +40,8 @@ end
 
 execute "install_vim_plugins" do
   command "vim +BundleInstall +qall!"
+end
+
+execute "update_permissions" do
+  command "chown vagrant:vagrant -R #{node['my_environment']['projects_dir']}"
 end
