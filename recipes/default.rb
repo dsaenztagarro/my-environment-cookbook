@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: my_environment
+# Cookbook Name:: my-environment
 # Recipe:: default
 #
 # Copyright (C) 2014 David Saenz Tagarro
@@ -11,21 +11,31 @@ include_recipe 'apt'
 include_recipe 'vim'
 include_recipe 'git'
 
+home_path = node['my-environment']['home_path']
+projects_path = node['my-environment']['projects_path']
+dotfiles_path = "#{projects_path}/dotfiles"
+
+directory projects_path do
+  owner 'vagrant'
+  group 'vagrant'
+  recursive true
+end
+
 git "clone dotfiles" do
   repository "git@github.com:dsaenztagarro/dotfiles.git"
   reference "master"
   action :sync
-  destination "#{node['my_environment']['projects_dir']}/dotfiles"
+  destination dotfiles_path
 end
 
 git "clone solarized" do
   repository "git@github.com:altercation/solarized.git"
   reference "master"
   action :sync
-  destination "#{node['my_environment']['projects_dir']}/solarized"
+  destination "#{projects_path}/solarized"
 end
 
-directory projects_dir do
+directory "#{home_path}/.vim/bundle" do
   owner 'vagrant'
   group 'vagrant'
   recursive true
@@ -35,13 +45,26 @@ git "clone vundle.vim" do
   repository "git@github.com:gmarik/Vundle.vim.git"
   reference "master"
   action :sync
-  destination "#{node['my_environment']['home_dir']}/.vim/bundle/Vundle.vim"
+  destination "#{home_path}/.vim/bundle/Vundle.vim"
 end
 
 execute "install_vim_plugins" do
+  cwd "/home/vagrant"
+  user "vagrant"
+  action :run
   command "vim +BundleInstall +qall!"
 end
 
-execute "update_permissions" do
-  command "chown vagrant:vagrant -R #{node['my_environment']['projects_dir']}"
+execute "install_tmux" do
+  command "apt-get install tmux -y"
+end
+
+execute "link_dotfiles" do
+  command <<-bash
+    ln -s -f #{dotfiles_path}/vim/vimrc #{home_path}/.vimrc &&
+    ln -s -f #{dotfiles_path}/git/gitconfig #{home_path}/.gitconfig &&
+    ln -s -f #{dotfiles_path}/jshint/jshintrc #{home_path}/.jshintrc &&
+    ln -s -f #{dotfiles_path}/hg/hgrc #{home_path}/.hgrc &&
+    ln -s -f #{dotfiles_path}/tmux/tmux.conf #{home_path}/.tmux.conf
+  bash
 end

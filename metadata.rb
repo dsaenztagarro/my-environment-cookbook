@@ -1,4 +1,4 @@
-name             'my_environment'
+name             'my-environment'
 maintainer       'David Saenz Tagarro'
 maintainer_email 'david.saenz.tagarro@gmail.com'
 license          'All rights reserved'

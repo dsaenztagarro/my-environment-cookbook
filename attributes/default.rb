@@ -1,3 +1,6 @@
-default['my_environment']['home_dir'] = '/home/vagrant'
-default['my_environment']['development_dir'] = "#{home_dir}/Development"
-default['my_environment']['projects_dir'] = "#{development_dir}/projects"
+home_path = '/home/vagrant'
+development_path = "#{home_path}/Development"
+
+default['my-environment']['home_path'] = home_path
+default['my-environment']['development_path'] = "#{home_path}/Development"
+default['my-environment']['projects_path'] = "#{development_path}/projects"
