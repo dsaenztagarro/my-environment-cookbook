@@ -15,6 +15,17 @@ home_path = node['my-environment']['home_path']
 projects_path = node['my-environment']['projects_path']
 dotfiles_path = "#{projects_path}/dotfiles"
 
+execute "copy_ssh_credentials" do
+  command <<-EOH
+    mkdir -p /root/.ssh
+    cp /vagrant/conf/id_rsa.pub /root/.ssh/authorized_keys
+    cp /vagrant/conf/known_hosts /root/.ssh/known_hosts
+    cp /vagrant/conf/id_rsa.pub /home/vagrant/.ssh/authorized_keys
+    cp /vagrant/conf/known_hosts /home/vagrant/.ssh/known_hosts
+    /etc/init.d/ssh restart
+  EOH
+end
+
 directory projects_path do
   owner 'vagrant'
   group 'vagrant'
@@ -48,23 +59,16 @@ git "clone vundle.vim" do
   destination "#{home_path}/.vim/bundle/Vundle.vim"
 end
 
-execute "install_vim_plugins" do
-  cwd "/home/vagrant"
-  user "vagrant"
-  action :run
-  command "vim +BundleInstall +qall!"
-end
-
 execute "install_tmux" do
   command "apt-get install tmux -y"
 end
 
 execute "link_dotfiles" do
-  command <<-bash
+  command <<-EOH
     ln -s -f #{dotfiles_path}/vim/vimrc #{home_path}/.vimrc &&
     ln -s -f #{dotfiles_path}/git/gitconfig #{home_path}/.gitconfig &&
     ln -s -f #{dotfiles_path}/jshint/jshintrc #{home_path}/.jshintrc &&
     ln -s -f #{dotfiles_path}/hg/hgrc #{home_path}/.hgrc &&
     ln -s -f #{dotfiles_path}/tmux/tmux.conf #{home_path}/.tmux.conf
-  bash
+  EOH
 end
