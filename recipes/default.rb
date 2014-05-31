@@ -59,8 +59,11 @@ git "clone vundle.vim" do
   destination "#{home_path}/.vim/bundle/Vundle.vim"
 end
 
-execute "install_tmux" do
-  command "apt-get install tmux -y"
+execute "install_devtools" do
+  command <<-EOH
+    apt-get install tmux -y"
+    apt-get install exuberant-ctags -y
+  EOH
 end
 
 execute "link_dotfiles" do
