@@ -70,7 +70,7 @@ end
 
 execute "install_devtools" do
   command <<-EOH
-    apt-get install tmux -y"
+    apt-get install tmux -y
     apt-get install exuberant-ctags -y
     apt-get install unzip -y
   EOH
