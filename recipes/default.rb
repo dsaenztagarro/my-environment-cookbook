@@ -18,11 +18,11 @@ dotfiles_path = "#{projects_path}/dotfiles"
 # Command depends on running provision through shell command: rake vagrant
 execute "copy_ssh_credentials" do
   command <<-EOH
-    mkdir -p /root/.ssh
-    cp /vagrant/tmp/id_rsa.pub /root/.ssh/authorized_keys
-    cp /vagrant/tmp/known_hosts /root/.ssh/known_hosts
-    cp /vagrant/tmp/id_rsa.pub /home/vagrant/.ssh/authorized_keys
-    cp /vagrant/tmp/known_hosts /home/vagrant/.ssh/known_hosts
+    mkdir -p -v /root/.ssh
+    cp -f -v /vagrant/tmp/id_rsa.pub /root/.ssh/authorized_keys
+    cp -f -v /vagrant/tmp/known_hosts /root/.ssh/known_hosts
+    cp -f -v /vagrant/tmp/id_rsa.pub /home/vagrant/.ssh/authorized_keys
+    cp -f -v /vagrant/tmp/known_hosts /home/vagrant/.ssh/known_hosts
     /etc/init.d/ssh restart
   EOH
 end
