@@ -47,6 +47,14 @@ git "clone solarized" do
   destination "#{projects_path}/solarized"
 end
 
+execute "git_config" do
+  command <<-EOH
+    git config --global user.name "dsaenztagarro"
+    git config --global user.email david.saenz.tagarro@gmail.com
+    git config --global core.editor "vim"
+  EOH
+end
+
 directory "#{home_path}/.vim/bundle" do
   owner 'vagrant'
   group 'vagrant'
